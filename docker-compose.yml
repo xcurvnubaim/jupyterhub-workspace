@@ -99,13 +99,6 @@ services:
       default:
         aliases:
           - jupyterhub
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
     volumes:
       # Bind Docker socket on the host so we can connect to the daemon from
       # within the container

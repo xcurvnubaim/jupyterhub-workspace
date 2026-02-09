@@ -112,3 +112,13 @@ def options_from_form(options_form_data):
     return options
 
 c.DockerSpawner.options_from_form = options_from_form
+
+c.DockerSpawner.extra_host_config = {
+    "device_requests": [
+        {
+            "Driver": "nvidia",
+            "Count": -1,
+            "Capabilities": [["gpu"]],
+        }
+    ]
+}
