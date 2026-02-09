@@ -6,12 +6,13 @@ RUN pip install --no-cache-dir \
     jupyterhub==5 \
     notebook
 
-# Create jovyan user with UID 1001 (UID 1000 already exists in NVIDIA images)
-# Add to video group (GID 44) for GPU access
-RUN groupadd -g 100 users 2>/dev/null || true && \
-    useradd -m -s /bin/bash -u 1001 -g 100 -G video jovyan && \
+# Use existing ubuntu user (UID 1000) and rename it to jovyan for consistency
+RUN usermod -l jovyan ubuntu && \
+    groupmod -n jovyan ubuntu 2>/dev/null || true && \
+    usermod -aG users,video jovyan && \
+    usermod -d /home/jovyan -m jovyan && \
     mkdir -p /home/jovyan/work && \
-    chown -R jovyan:users /home/jovyan
+    chown -R jovyan:jovyan /home/jovyan
 
 USER jovyan
 WORKDIR /home/jovyan/work

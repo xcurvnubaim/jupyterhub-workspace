@@ -7,7 +7,7 @@ c = get_config()  # noqa
 c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
 
 # Allow anyone to sign-up without approval
-c.NativeAuthenticator.open_signup = False
+c.NativeAuthenticator.open_signup = True
 
 # Allow all signed-up users to login
 c.Authenticator.allow_all = True
@@ -51,9 +51,9 @@ def create_dir_hook(spawner):
     user_dir = pathlib.Path(f"/data/jupyterhub-user-{username}")
     user_dir.mkdir(parents=True, exist_ok=True)
     
-    # Set ownership to users group (GID 100) and make it writable by group
-    # This works for both standard images (UID 1000) and NVIDIA images (UID 1001)
-    subprocess.run(['chgrp', '100', str(user_dir)], check=False)
+    # Set ownership to UID 1000 (ubuntu/jovyan) and make writable
+    # Works for both standard singleuser images (jovyan) and NVIDIA images (ubuntu)
+    subprocess.run(['chown', '-R', '1000:1000', str(user_dir)], check=False)
     subprocess.run(['chmod', '775', str(user_dir)], check=False)
 
 c.Spawner.pre_spawn_hook = create_dir_hook
@@ -71,15 +71,15 @@ c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
 # Selectable user environments via Docker images
 c.DockerSpawner.allowed_images = [
     "quay.io/jupyterhub/singleuser:5.4",
-    "jupyterhub-nvidia-tensorflow:latest",
-    "jupyterhub-nvidia-pytorch:latest"
+    "jupyterhub-nvidia-tensorflow:local",
+    "jupyterhub-nvidia-pytorch:local"
 ]
 
 # Image labels for better UX
 image_labels = {
     "quay.io/jupyterhub/singleuser:5.4": "JupyterHub Single User (Default)",
-    "jupyterhub-nvidia-tensorflow:latest": "NVIDIA TensorFlow 25.02",
-    "jupyterhub-nvidia-pytorch:latest": "NVIDIA PyTorch 26.01"
+    "jupyterhub-nvidia-tensorflow:local": "NVIDIA TensorFlow 25.02",
+    "jupyterhub-nvidia-pytorch:local": "NVIDIA PyTorch 26.01"
 }
 
 def get_options_form(spawner):
