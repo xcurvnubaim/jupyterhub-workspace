@@ -1,0 +1,28 @@
+# Optional docker-compose override for building notebook images
+# 
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.images.yml build
+#
+# This file provides build configurations for all available notebook images.
+# To use a specific image, set DOCKER_NOTEBOOK_IMAGE in your .env file.
+
+services:
+  # NVIDIA PyTorch notebook image
+  nvidia-pytorch:
+    build:
+      context: images/nvidia-pytorch
+      dockerfile: Dockerfile
+      args:
+        PYTORCH_IMAGE: nvcr.io/nvidia/pytorch:26.01-py3
+    image: jupyterhub-nvidia-pytorch:latest
+    command: ["--help"]  # Dummy command, not meant to run
+
+  # NVIDIA TensorFlow notebook image
+  nvidia-tensorflow:
+    build:
+      context: images/nvidia-tensorflow
+      dockerfile: Dockerfile
+      args:
+        TENSORFLOW_IMAGE: nvcr.io/nvidia/tensorflow:25.02-tf2-py3
+    image: jupyterhub-nvidia-tensorflow:latest
+    command: ["--help"]  # Dummy command, not meant to run
