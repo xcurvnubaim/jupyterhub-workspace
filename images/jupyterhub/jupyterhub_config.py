@@ -71,15 +71,15 @@ c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
 # Selectable user environments via Docker images
 c.DockerSpawner.allowed_images = [
     "quay.io/jupyterhub/singleuser:5.4",
-    "jupyterhub-nvidia-tensorflow:local",
-    "jupyterhub-nvidia-pytorch:local"
+    "jupyterhub-nvidia-tensorflow:latest",
+    "jupyterhub-nvidia-pytorch:latest"
 ]
 
 # Image labels for better UX
 image_labels = {
     "quay.io/jupyterhub/singleuser:5.4": "JupyterHub Single User (Default)",
-    "jupyterhub-nvidia-tensorflow:local": "NVIDIA TensorFlow 25.02",
-    "jupyterhub-nvidia-pytorch:local": "NVIDIA PyTorch 26.01"
+    "jupyterhub-nvidia-tensorflow:latest": "NVIDIA TensorFlow 25.02",
+    "jupyterhub-nvidia-pytorch:latest": "NVIDIA PyTorch 26.01"
 }
 
 def get_options_form(spawner):
