@@ -83,7 +83,7 @@ image_labels = {
     "quay.io/jupyterhub/singleuser:5.4": "JupyterHub Single User (Default)",
     "jupyterhub-nvidia-tensorflow:latest": "NVIDIA TensorFlow 25.02",
     "jupyterhub-nvidia-pytorch:latest": "NVIDIA PyTorch 26.01",
-    "jupyterhub-images-alphatauri:latest": "JupyterHub Images Alpha (Experimental)"
+    "jupyterhub-images-alphatauri:latest": "JupyterHub Images Alphatauri (Experimental)"
 }
 
 def get_options_form(spawner):
