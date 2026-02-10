@@ -10,7 +10,8 @@ services:
       proxy:
         condition: service_healthy
     ports:
-      - "8000:8000"
+      - "80:80" 
+      - "443:443"
     networks:
       - default
     volumes:
