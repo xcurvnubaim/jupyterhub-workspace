@@ -9,7 +9,7 @@ c = get_config()  # noqa
 c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
 
 # Allow anyone to sign-up without approval
-c.NativeAuthenticator.open_signup = True
+c.NativeAuthenticator.open_signup = False
 
 # Allow all signed-up users to login
 c.Authenticator.allow_all = True
