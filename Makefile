@@ -26,6 +26,10 @@ build-tensorflow:
 	@echo "Building NVIDIA TensorFlow notebook image..."
 	docker build -t jupyterhub-nvidia-tensorflow:latest images/nvidia-tensorflow/
 
+build-alpha:
+	@echo "Building JupyterHub Alpha server image..."
+	docker build -t jupyterhub-images-alphatauri:latest images/alphatauri/
+
 clean:
 	@echo "Cleaning up old images..."
 	@echo "Warning: This will remove dangling images"
