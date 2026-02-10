@@ -119,8 +119,10 @@ c.DockerSpawner.extra_host_config = {
     "shm_size": "2g"  # Shared memory is a specific part of the RAM used by processes to communicate with each other quickly.
 }
 
-# Check if NVIDIA GPU is available on the host
-if shutil.which('nvidia-smi'):
+# Enable GPU support via environment variable
+enable_gpu = os.environ.get('ENABLE_GPU', '0') == '1'
+
+if enable_gpu:
     c.DockerSpawner.extra_host_config.update({
         "device_requests": [
             {
@@ -130,8 +132,9 @@ if shutil.which('nvidia-smi'):
             }
         ]
     })
+    print("GPU support enabled for spawned containers.")
 else:
-    print("NVIDIA GPU not detected. Running in CPU-only mode.")
+    print("Running in CPU-only mode. Set ENABLE_GPU=1 to enable GPU support.")
 
 # Idle culler configuration
 c.JupyterHub.load_roles = [

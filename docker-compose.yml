@@ -125,6 +125,8 @@ services:
       DOCKER_NOTEBOOK_DIR: ${DOCKER_NOTEBOOK_DIR}
       # Absolute path on host where user data will be stored
       HOST_DATA_DIR: ${PWD}/volume
+      # Enable GPU support (1 = enabled, 0 = disabled)
+      ENABLE_GPU: ${ENABLE_GPU:-0}
     working_dir: ${DATA_VOLUME_CONTAINER}
     command: >
       jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
