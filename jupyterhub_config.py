@@ -155,7 +155,9 @@ c.JupyterHub.services = [
         "command": [
             sys.executable, 
             "-m", "jupyterhub_idle_culler", 
-            "--timeout=3600" # Shutdown after 1 hour of inactivity
+            "--timeout=3600", # Shutdown after 1 hour of inactivity
+            "--ssl-enabled=true",
+            f"--internal-certs-location={os.environ['INTERNAL_SSL_PATH']}"
         ],
     }
 ]
