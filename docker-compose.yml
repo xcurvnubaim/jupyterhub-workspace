@@ -69,6 +69,7 @@ services:
     image: jupyterhub/jupyterhub:internal-ssl
     volumes:
       - "ssl:${SSL_VOLUME_CONTAINER}:rw"
+      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
     environment:
       PYTHONUNBUFFERED: "1"
       CONFIGPROXY_AUTH_TOKEN: ${CONFIGPROXY_AUTH_TOKEN}
