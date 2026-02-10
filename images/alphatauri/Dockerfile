@@ -47,9 +47,10 @@ RUN mamba install -y -c conda-forge \
     seaborn=0.13.2 \
     # --- GPU Support (RTX 6000 Ada) ---
     # Note: TensorFlow 2.16+ is required for Numpy 2.0
-    "tensorflow>=2.17" \
+    "tensorflow-gpu=2.17" \
     "cuda-version=12.4" \
-    cudnn \
+    "cuda-cudart=12.4" \
+    "cudnn=9.10" \
     # --- Lab Admin Constraints ---
     "packaging<=24.2" \
     && mamba clean -afy
