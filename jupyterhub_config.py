@@ -1,6 +1,8 @@
 import os
 import subprocess
 import pathlib
+import sys
+import shutil
 
 c = get_config()  # noqa
 
@@ -114,11 +116,46 @@ def options_from_form(options_form_data):
 c.DockerSpawner.options_from_form = options_from_form
 
 c.DockerSpawner.extra_host_config = {
-    "device_requests": [
-        {
-            "Driver": "nvidia",
-            "Count": -1,
-            "Capabilities": [["gpu"]],
-        }
-    ]
+    "shm_size": "2g"  # Shared memory is a specific part of the RAM used by processes to communicate with each other quickly.
 }
+
+# Check if NVIDIA GPU is available on the host
+if shutil.which('nvidia-smi'):
+    c.DockerSpawner.extra_host_config.update({
+        "device_requests": [
+            {
+                "driver": "nvidia",
+                "count": -1,  # Use all available GPUs
+                "capabilities": [["gpu"]],
+            }
+        ]
+    })
+else:
+    print("NVIDIA GPU not detected. Running in CPU-only mode.")
+
+# Idle culler configuration
+c.JupyterHub.load_roles = [
+    {
+        "name": "jupyterhub-idle-culler-role",
+        "scopes": [
+            "list:users",
+            "read:users:activity",
+            "read:servers",
+            "delete:servers",
+            # "admin:users", # if using --cull-users
+        ],
+        # assignment of role's permissions to:
+        "services": ["jupyterhub-idle-culler-service"],
+    }
+]
+
+c.JupyterHub.services = [
+    {
+        "name": "jupyterhub-idle-culler-service",
+        "command": [
+            sys.executable, 
+            "-m", "jupyterhub_idle_culler", 
+            "--timeout=3600" # Shutdown after 1 hour of inactivity
+        ],
+    }
+]
