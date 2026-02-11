@@ -26,7 +26,7 @@ build-tensorflow:
 	@echo "Building NVIDIA TensorFlow notebook image..."
 	docker build -t jupyterhub-nvidia-tensorflow:latest images/nvidia-tensorflow/
 
-build-alpha:
+build-alphatauri:
 	@echo "Building JupyterHub Alpha server image..."
 	docker build -t jupyterhub-images-alphatauri:latest images/alphatauri/
 
