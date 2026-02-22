@@ -28,6 +28,7 @@ c.JupyterHub.internal_ssl = True
 
 c.DockerSpawner.image = os.environ['DOCKER_NOTEBOOK_IMAGE']
 c.DockerSpawner.remove_containers = True
+c.DockerSpawner.mem_limit = '32G'
 c.JupyterHub.log_level = 10
 
 c.JupyterHub.hub_ip = '0.0.0.0'
