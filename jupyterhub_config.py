@@ -47,13 +47,6 @@ c.DockerSpawner.notebook_dir = notebook_dir
 # We need to use the absolute path on the host for Docker mounts
 host_data_dir = os.environ.get('HOST_DATA_DIR', '/data')
 
-JUPYTER_SERVER_CONFIG = """
-c.MappingKernelManager.cull_idle_timeout = 3600
-c.MappingKernelManager.cull_interval = 300
-c.MappingKernelManager.cull_connected = True
-c.MappingKernelManager.cull_busy = False
-"""
-
 def create_dir_hook(spawner):
     """Create user directory on host before spawning container"""
     username = spawner.user.name
@@ -66,13 +59,6 @@ def create_dir_hook(spawner):
     subprocess.run(['chown', '-R', '1000:1000', str(user_dir)], check=False)
     subprocess.run(['chmod', '775', str(user_dir)], check=False)
 
-    # Write jupyter_server_config.py into user dir so it gets mounted into the container
-    # The file will be available at {notebook_dir}/jupyter_server_config.py inside the container
-    config_path = user_dir / "jupyter_server_config.py"
-    if not config_path.exists():
-        config_path.write_text(JUPYTER_SERVER_CONFIG)
-        subprocess.run(['chown', '1000:1000', str(config_path)], check=False)
-
 c.Spawner.pre_spawn_hook = create_dir_hook
 
 # Mount a directory on the host to the notebook user's notebook directory in the container
@@ -80,11 +66,6 @@ c.Spawner.pre_spawn_hook = create_dir_hook
 c.DockerSpawner.mounts = [
     {'source': f'{host_data_dir}/jupyterhub-user-{{username}}', 'target': notebook_dir, 'type': 'bind'}
 ]
-
-# Tell jupyter server to also load config from the notebook dir (which is bind-mounted)
-c.DockerSpawner.environment = {
-    "JUPYTER_SERVER_CONFIG": f"{notebook_dir}/jupyter_server_config.py"
-}
 
 # Persist hub data on volume mounted inside container
 c.JupyterHub.cookie_secret_file = "/data/jupyterhub_cookie_secret"
