@@ -182,7 +182,6 @@ c.JupyterHub.services = [
             "-m", "jupyterhub_idle_culler", 
             "--timeout=3600", # Shutdown after 1 hour of inactivity
             "--ssl-enabled=true",
-            "--cull-connected", # Make kernel activity count as "active" to prevent culling while user is working
             f"--internal-certs-location={os.environ['INTERNAL_SSL_PATH']}"
         ],
     }
