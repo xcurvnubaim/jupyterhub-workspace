@@ -17,4 +17,6 @@ RUN usermod -l jovyan ubuntu && \
 USER jovyan
 WORKDIR /home/jovyan/work
 
+COPY jupyter_server_config.py /etc/jupyter/
+
 CMD ["jupyterhub-singleuser"]

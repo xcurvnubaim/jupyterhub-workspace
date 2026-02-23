@@ -70,7 +70,7 @@ services:
     image: jupyterhub/jupyterhub:internal-ssl
     volumes:
       - "ssl:${SSL_VOLUME_CONTAINER}:rw"
-      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
+      - "./images/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
     environment:
       PYTHONUNBUFFERED: "1"
       CONFIGPROXY_AUTH_TOKEN: ${CONFIGPROXY_AUTH_TOKEN}
@@ -108,7 +108,7 @@ services:
       # Bind Docker volume on host for JupyterHub database and cookie secrets
       - "data:${DATA_VOLUME_CONTAINER}:rw"
       - "ssl:${SSL_VOLUME_CONTAINER}:rw"
-      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
+      - "./images/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
       - "./volume:/data"
     environment:
       PYTHONUNBUFFERED: "1"
