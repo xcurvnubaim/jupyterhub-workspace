@@ -1,4 +1,4 @@
-.PHONY: help build-all build-hub build-pytorch build-tensorflow clean
+.PHONY: help build-all build-hub build-pytorch build-tensorflow clean build-alphatauri
 
 help:
 	@echo "JupyterHub Docker Image Build Commands"
