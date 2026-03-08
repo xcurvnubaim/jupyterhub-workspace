@@ -16,6 +16,7 @@ services:
       - default
     volumes:
       - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
+      - "./certs:/etc/haproxy/certs:ro"
 
   proxy:
     depends_on:
@@ -28,6 +29,7 @@ services:
     environment:
       CONFIGPROXY_AUTH_TOKEN: ${CONFIGPROXY_AUTH_TOKEN}
       PYTHONUNBUFFERED: "1"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
     volumes:
       - "ssl:${SSL_VOLUME_CONTAINER}:ro"
     user: "0:0"
@@ -42,6 +44,7 @@ services:
       retries: 3
     command: >
       configurable-http-proxy
+      --insecure
       --port 8443
       --ssl-key ${SSL_VOLUME_CONTAINER}/certs/proxy-client/proxy-client.key
       --ssl-cert ${SSL_VOLUME_CONTAINER}/certs/proxy-client/proxy-client.crt
@@ -57,7 +60,6 @@ services:
       --client-ssl-cert ${SSL_VOLUME_CONTAINER}/certs/proxy-client/proxy-client.crt
       --client-ssl-ca ${SSL_VOLUME_CONTAINER}/certs/proxy-client-ca_trust.crt
       --client-ssl-request-cert
-      --client-ssl-reject-unauthorized
 
   # this is identical to the hub service
   # but runs the `--generate-certs` step first
@@ -80,6 +82,8 @@ services:
       DOCKER_NOTEBOOK_IMAGE: ${DOCKER_NOTEBOOK_IMAGE}
       # SSL path
       INTERNAL_SSL_PATH: ${SSL_VOLUME_CONTAINER}/certs
+      # Custom domain for SSL cert alt names
+      CUSTOM_DOMAIN: ${CUSTOM_DOMAIN:-}
     working_dir: ${DATA_VOLUME_CONTAINER}
     command: >
       jupyterhub -f /srv/jupyterhub/jupyterhub_config.py --generate-certs
@@ -129,6 +133,8 @@ services:
       ENABLE_GPU: ${ENABLE_GPU:-0}
       # Memory limit for spawned containers (e.g., "4G", "32G")
       DOCKER_SPAWN_MEM_LIMIT: ${DOCKER_SPAWN_MEM_LIMIT:-32G}
+      # Custom domain for SSL cert alt names
+      CUSTOM_DOMAIN: ${CUSTOM_DOMAIN:-}
     working_dir: ${DATA_VOLUME_CONTAINER}
     command: >
       jupyterhub -f /srv/jupyterhub/jupyterhub_config.py

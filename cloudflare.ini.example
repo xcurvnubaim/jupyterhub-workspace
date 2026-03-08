@@ -1,0 +1,4 @@
+# Cloudflare API credentials for Let's Encrypt DNS-01 challenge
+# Get your API token from: https://dash.cloudflare.com/profile/api-tokens
+# Create a token with "Zone:DNS:Edit" permission for your domain
+dns_cloudflare_api_token = YOUR_CLOUDFLARE_API_TOKEN_HERE

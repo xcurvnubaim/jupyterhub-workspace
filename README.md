@@ -84,3 +84,12 @@ Configure your deployment by setting environment variables in `.env`:
 ## Adding Custom Images
 
 See [images/README.md](images/README.md) for instructions on adding new notebook images.
+
+## Troubleshooting
+
+### `503 Service Unavailable` or `599` API Error on Startup
+If `ConfigurableHTTPProxy` throws `[ERR_TLS_CERT_ALTNAME_INVALID]`, the Node.js proxy is rejecting the user container's SSL certificate because it lacks your `CUSTOM_DOMAIN` alt name:
+
+1. **Verify Custom Spawner**: In `images/jupyterhub/jupyterhub_config.py`, verify that `c.JupyterHub.spawner_class = CustomDockerSpawner` is active to automatically append the domain.
+2. **Clear orphaned SSL certificates**: Run `docker volume rm jupyterhub-ssl` (after stopping containers) to force the `generate-certs` service to create valid certificates containing the domain.
+3. **Internal Cert Recreation**: Validate `c.JupyterHub.recreate_internal_certs = False` is set, otherwise JupyterHub will recreate the hub certs on every restart, causing a mismatch with the already running proxy.

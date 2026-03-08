@@ -19,7 +19,19 @@ admin = os.environ.get("JUPYTERHUB_ADMIN")
 if admin:
     c.Authenticator.admin_users = [admin]
 
-c.JupyterHub.spawner_class = 'docker'
+from dockerspawner import DockerSpawner
+import os
+
+class CustomDockerSpawner(DockerSpawner):
+    @property
+    def cert_alt_names(self):
+        names = super().cert_alt_names
+        custom_domain = os.environ.get("CUSTOM_DOMAIN")
+        if custom_domain:
+            names.append(f"DNS:{custom_domain}")
+        return names
+
+c.JupyterHub.spawner_class = CustomDockerSpawner
 
 c.ConfigurableHTTPProxy.should_start = False
 c.ConfigurableHTTPProxy.api_url = 'https://proxy:8001'
@@ -35,8 +47,12 @@ c.JupyterHub.hub_ip = '0.0.0.0'
 c.JupyterHub.hub_connect_ip = 'jupyterhub'
 c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 c.JupyterHub.internal_certs_location = os.environ['INTERNAL_SSL_PATH']
-# c.JupyterHub.recreate_internal_certs = True
-c.JupyterHub.trusted_alt_names = ["DNS:jupyterhub", "DNS:proxy"]
+c.JupyterHub.recreate_internal_certs = False
+trusted_names = ["DNS:jupyterhub", "DNS:proxy"]
+custom_domain = os.environ.get("CUSTOM_DOMAIN")
+if custom_domain:
+    trusted_names.append(f"DNS:{custom_domain}")
+c.JupyterHub.trusted_alt_names = trusted_names
 
 notebook_dir = os.environ.get("DOCKER_NOTEBOOK_DIR", "/home/jovyan/work")
 c.DockerSpawner.notebook_dir = notebook_dir
